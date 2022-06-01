@@ -6,35 +6,31 @@ export default function CardsCollection({cardsData, sortData}) {
     const [showMore, setShowMore] = useState(false);
 
     const vote = (postId, value) => {
-        let dataObject;
-        let idx;
         cardsData.forEach(element => {
             if (element.id === postId) {
                 element.votes = element.votes + value
-                dataObject = element
-                idx = cardsData.indexOf(element)
                 return
             }
         });
         sortData(cardsData)
     }
 
-    const showMoreClick = (newState) => {
+    const showMoreOnClick = (newState) => {
         setShowMore(newState)
     }
 
     const pinCard = (postId, value) => {
-        let dataObject;
-        let idx;
         cardsData.forEach(element => {
             if (element.id === postId) {
                 element.pinned = value
-                dataObject = element
-                idx = cardsData.indexOf(element)
                 return
             }
         });
         sortData(cardsData)
+    }
+
+    const createPostCard = (data) =>{
+        return <PostCard key={data.id} postData={data} vote={vote} setPin={pinCard}/>
     }
 
     return (
@@ -42,24 +38,23 @@ export default function CardsCollection({cardsData, sortData}) {
             {
                 cardsData.length > 2?
                     <>
-                        {/* {createPostCard(cardsData[0])} */}
-                        <PostCard key={cardsData[0].id} postData={cardsData[0]} vote={vote} setPin={pinCard}/>
-                        <PostCard key={cardsData[1].id} postData={cardsData[1]} vote={vote} setPin={pinCard}/>
+                        {createPostCard(cardsData[0])}
+                        {createPostCard(cardsData[1])}
                         
                         {
                             showMore? 
                             <>
                                 {
-                                    cardsData.slice(2).map(data => <PostCard key={data.id} postData={data} vote={vote} setPin={pinCard}/>)
+                                    cardsData.slice(2).map(data => createPostCard(data))
                                 }
-                                <a className='show-btn' href="#" onClick={()=>showMoreClick(false)}>show less</a>
+                                <a className='show-btn' href="#" onClick={()=>showMoreOnClick(false)}>show less</a>
                             </>
-                            : <a className='show-btn'  href="#" onClick={()=>showMoreClick(true)}> show more</a>
+                            : <a className='show-btn'  href="#" onClick={()=>showMoreOnClick(true)}> show more</a>
                             
                         }
 
                     </>:
-                    cardsData.map(data => <PostCard key={data.id} postData={data} vote={vote} setPin={pinCard}/>)
+                    cardsData.map(data => createPostCard(data))
             }
         </div>
     )
